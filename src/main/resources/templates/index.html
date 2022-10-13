@@ -28,6 +28,26 @@
             <br>
             <input type="button" value="提交" onClick="submitDecrypt()"/>
         </div>
+        <!--文件切片-->
+        <div class="file-slice">
+            待切片文件：<input type="text" id="slice-file" onkeyup="inputSliceFile(this)">
+            示例：/Users/pluttt/Downloads/jm/1.mkv
+            <br>
+            切片完成存放路径：<input type="text" id="file-slice-path" onkeyup="inputSlicePath(this)">
+            示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）
+            <br>
+            <input type="button" value="提交" onClick="submitSlice()"/>
+        </div>
+        <!--文件合并-->
+        <div class="file-merge">
+            待合并的文件路径：<input type="text" id="file-merge-path" onkeyup="inputMergePath(this)">
+            示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）
+            <br>
+            合并完成存放文件：<input type="text" id="merge-file" onkeyup="inputMergeFile(this)">
+            示例：/Users/pluttt/Downloads/jm/he/1.mkv
+            <br>
+            <input type="button" value="提交" onClick="submitMerge()"/>
+        </div>
 
         <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
         <script>
@@ -79,9 +99,7 @@
                         data: item,
                         success: function (res) {
                             console.log("成功"+res);
-                        }, error() {
-                            console.log("失败");
-                        },
+                        }
                     })
                 });
             }
@@ -134,12 +152,74 @@
                         data: item,
                         success: function (res) {
                             console.log("成功"+res);
-                        }, error() {
-                            console.log("失败");
-                        },
+                        }
                     })
                 });
             }
+
+            /**文件切片*/
+            let slice_file = "";
+            function inputSliceFile(obj) {
+                let val = obj.value;
+                slice_file = val;
+            }
+            let slice_path = "";
+            function inputSlicePath(obj) {
+                let val = obj.value;
+                slice_path = val;
+            }
+            //提交路径及文件名
+            function submitSlice(){
+                let res = [];
+                res.push({
+                    sourceFilePath: slice_file,
+                    chunkpath: slice_path
+                })
+                console.log(res);
+                $.ajax({
+                    type: "GET",
+                    url: '/filePart',
+                    dataType: 'json',
+                    contentType:"application/json",
+                    data: res,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+
+            /**文件切片*/
+            let merge_path = "";
+            function inputMergePath(obj) {
+                let val = obj.value;
+                merge_path = val;
+            }
+            let merge_file = "";
+            function inputMergeFile(obj) {
+                let val = obj.value;
+                merge_file = val;
+            }
+            //提交路径及文件名
+            function submitMerge(){
+                let res = [];
+                res.push({
+                    chunkFolderPath: merge_path,
+                    mergeFilePathName: merge_file
+                })
+                console.log(res);
+                $.ajax({
+                    type: "GET",
+                    url: '/fileMerge',
+                    dataType: 'json',
+                    contentType:"application/json",
+                    data: res,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+
+
 
         </script>
     </body>
