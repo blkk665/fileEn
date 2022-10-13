@@ -12,7 +12,7 @@
             <br>
             请选择该目录<span id="file-box"></span>，以获取其下的文件
             <!-- <div id="Box"></div> -->
-            <input type="file" id="file-uploader" webkitdirectory/>
+            <input type="file" id="file-uploader" multiple/>
             <br>
             <input type="button" value="提交" onClick="submitPathName()"/>
         </div>
@@ -60,12 +60,12 @@
                 files.forEach(item => {
                     $.ajax({
                         type: "GET",
-                        url: '/filePart',
+                        url: '/enFile',
                         dataType: 'json',
                         contentType:"application/json",
                         data: item,
                         success: function (res) {
-                            console.log(res);
+                            console.log("成功"+res);
                         }, error() {
                             console.log("err");
                         },
