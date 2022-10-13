@@ -1,22 +1,119 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8">
-    <title>首页</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+        
+    </head>
+    <body>
+        <div class="get-file">
+            填写文件所在目录：<input type="text" id="file-path" onkeyup="inputDirectory(this)">
+            示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）
+            <br>
+            请选择该目录<span id="file-box"></span>，以获取其下的文件
+            <!-- <div id="Box"></div> -->
+            <input type="file" id="file-uploader" webkitdirectory/>
+            <br>
+            <input type="button" value="提交" onClick="submitPathName()"/>
+        </div>
 
-<div th:name="en" >
-    <input type="file" value="上传加密文件"/>
-    <input type="button" value="提交"/>
-</div>
+        <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
+        <script>
+            //获取input目录
+            let path = "";
+            function inputDirectory(obj) {
+                // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
+                let val = obj.value;
+                document.getElementById('file-box').innerText = val;
+                path = val;
+            }
+            console.log(path);
 
-<div th:name="de">
-    <input type="button" value="上传解密文件"/>
-    <input type="button" value="提交"/>
+            //上传该目录下文件信息-文件名
+            const fileUploader = document.getElementById('file-uploader');
+            let result = [];
+            // 听更 change 件并读取元数据
+            fileUploader.addEventListener('change', (event) => {
+                // 获取文件列表数组
+                const files = event.target.files;
+                // 遍历并获取元数据
+                for (const file of files) {
+                    const name = file.name;
+                    const type = file.type ? file.type: 'NA';
+                    const size = file.size;
+                    const lastModified = file.lastModified;
+                    result.push(name);
+                    // console.log({ file, name, type, size, lastModified });
+                }
+            });
 
-</div>
+            //提交路径及文件名
+            function submitPathName(){
+                let files = [];
+                result.forEach(item => {
+                    files.push({
+                        filePath: path,
+                        fileName: item
+                    })
+                })
+                console.log(files);
+                files.forEach(item => {
+                    $.ajax({
+                        type: "GET",
+                        url: '/filePart',
+                        dataType: 'json',
+                        contentType:"application/json",
+                        data: item,
+                        success: function (res) {
+                            console.log(res);
+                        }, error() {
+                            console.log("err");
+                        },
+                    })
+                });
+            }
+
+            //预览
+            // FileReader 实例
+            // const reader = new FileReader();
+            // fileUploader.addEventListener('change', (event) => {
+            //     const files = event.target.files;
+            //     const file = files[0];
+            //     reader.readAsDataURL(file);
+            //     reader.addEventListener('load', (event) => {
+            //         const img = document.createElement('img');
+            //         imageGrid.appendChild(img);
+            //         img.src = event.target.result;
+            //         img.alt = file.name;
+            //     });
+            // });
+
+            // 验证文件大小
+            // fileUploader.addEventListener('change', (event) => {
+            //     const file = event.target.files[0];
+            //     const size = file.size;
+            //     let msg = '';
+            //     // 检查文件大小是否大于1MB
+            //     if (size > 1024 * 1024) {
+            //         msg = `<span style="color:red;">The allowed file size is 1MB. The file you are trying to upload is of ${returnFileSize(size)}</span>`;
+            //     } else {
+            //         msg = `<span style="color:green;"> A ${returnFileSize(size)} file has been uploaded successfully. </span>`;
+            //     }
+            //     feedback.innerHTML = msg;
+            // });
+
+            //显示文件上传进度
+            // const reader = new FileReader();
+            // reader.addEventListener('progress', (event) => {
+            //     if (event.loaded && event.total) {
+            //         // 计算完成百分比
+            //         const percent = (event.loaded / event.total) * 100;
+            //         // 将值绑定到 `progress`标签
+            //         progress.value = percent;
+            //     }
+            // });
 
 
-</body>
+        </script>
+    </body>
 </html>
