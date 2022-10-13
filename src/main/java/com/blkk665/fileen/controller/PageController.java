@@ -1,7 +1,6 @@
 package com.blkk665.fileen.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     @GetMapping("/index")
-    public String showIndex(Model model) {
+    public String showIndex() {
 //        model.addAttribute("message", "HelloWorld");
         return "index";
     }

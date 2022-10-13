@@ -1,18 +1,14 @@
 package com.blkk665.fileen.controller;
 
 import com.blkk665.fileen.utils.FileCryptoUtil;
-import org.springframework.http.ResponseEntity;
-
+import com.blkk665.fileen.utils.FilePartUtil;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @Description
@@ -25,39 +21,10 @@ public class FileController {
     private String encKey = "UM0QMU7mWCDQTxaP";
 
 
-
-    // 初始化
-    void setUp() {
-        // 加密KEY，长度不能小于16位
-        encKey = "UM0QMU7mWCDQTxaP";
-        System.out.println("encKey=" + encKey);
-
-        // 测试跟目录
-//        String testRootPath = FileCryptoUtilTest.class.getResource("/").getFile();
-        String testRootPath = "/Users/pluttt/Downloads/jm/";
-        System.out.println("testRootPath=" + testRootPath);
-
-//        sourceFile = new File(testRootPath + "1.jpg");
-//        if (!sourceFile.exists()) {
-//            throw new RuntimeException("fi not exist, path=" + sourceFile.getAbsolutePath());
-//        }
-//        System.out.println("sourceFile=" + sourceFile.getAbsolutePath());
-
-//        encFile = new File(testRootPath + "1-enc.jpg");
-//        System.out.println("encFile=" + encFile.getAbsolutePath());
-//        if (encFile.exists()) {
-//            System.out.println("delete result=" + encFile.delete());
-//        }
-
-//        decFile = new File(testRootPath + "1-dec.jpg");
-//        System.out.println("decFile=" + decFile.getAbsolutePath());
-//        if (decFile.exists()) {
-//            System.out.println("delete result=" + decFile.delete());
-//        }
-    }
-
-
-    // 加密
+    /**
+    *
+    * AES加密
+    */
     void encryptFile(String filePath, String fileName) throws Exception {
         File sourceFile;
         File encFile;
@@ -73,7 +40,10 @@ public class FileController {
 
     }
 
-    // 解密
+    /**
+    *
+    * AES解密
+    */
     void decryptFile(String filePath, String fileName) throws Exception {
         File encFile;
         File decFile;
@@ -92,7 +62,7 @@ public class FileController {
 
     /**
     *
-    * 加密
+    * DES加密
     */
     @GetMapping("/enFile")
     public void enFile(@RequestParam(value = "filePath") String filePath,
@@ -106,12 +76,45 @@ public class FileController {
 
     /**
     *
-    * 解密
+    * DES解密
     */
     @GetMapping("/deFile")
     public void deFile(@RequestParam(value = "filePath") String filePath,
                        @RequestParam(value = "fileName") String fileName) throws Exception {
         decryptFile(filePath, fileName);
+
+    }
+
+
+
+
+    /**
+    *
+    * 文件切片
+    * sourceFilePath 来源文件
+    * chunkpath 保存路径,要/结尾
+    */
+    @GetMapping("/filePart")
+    public void filePart(@RequestParam(value = "sourceFilePath") String sourceFilePath,
+                         @RequestParam(value = "chunkpath") String chunkpath) throws IOException {
+        FilePartUtil.filePart(sourceFilePath, chunkpath);
+
+    }
+
+
+
+    /**
+     * 合并分片文件
+     * chunkFolderPath 待合并的文件存放地址
+     * /Users/pluttt/Downloads/jm/cut/
+     *
+     * mergeFilePathName 合并后的存放地址
+     * /Users/pluttt/Downloads/jm/he/1.mkv
+     */
+    @GetMapping("/fileMerge")
+    public void fileMerge(@RequestParam(value = "chunkFolderPath") String chunkFolderPath,
+                         @RequestParam(value = "mergeFilePathName") String mergeFilePathName) throws IOException {
+        FilePartUtil.fileMerge(chunkFolderPath, mergeFilePathName);
 
     }
 
