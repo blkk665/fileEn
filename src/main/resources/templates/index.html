@@ -3,61 +3,159 @@
     <head>
         <meta charset="UTF-8">
         <title>首页</title>
-        
+        <link href="../static/css/style.css" rel="stylesheet">
     </head>
     <body>
-        <!--文件加密-->
-        <div class="file-encrypt">
-            填写文件所在目录：<input type="text" id="file-encrypt-path" onkeyup="inputEncryptPath(this)">
-            示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）
-            <br>
-            请选择该目录<span id="file-encrypt-box"></span>，以获取其下的文件
-            <!-- <div id="Box"></div> -->
-            <input type="file" id="file-encrypt-uploader" multiple/>
-            <br>
-            <input type="button" value="提交" onClick="submitEncrypt()"/>
-        </div>
-        <!--文件解密-->
-        <div class="file-decrypt">
-            填写文件所在目录：<input type="text" id="file-decrypt-path" onkeyup="inputDecryptPath(this)">
-            示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）
-            <br>
-            请选择该目录<span id="file-decrypt-box"></span>，以获取其下的文件
-            <!-- <div id="Box"></div> -->
-            <input type="file" id="file-decrypt-uploader" multiple/>
-            <br>
-            <input type="button" value="提交" onClick="submitDecrypt()"/>
-        </div>
-        <!--文件切片-->
-        <div class="file-slice">
-            待切片文件：<input type="text" id="slice-file" onkeyup="inputSliceFile(this)">
-            示例：/Users/pluttt/Downloads/jm/1.mkv
-            <br>
-            切片完成存放路径：<input type="text" id="file-slice-path" onkeyup="inputSlicePath(this)">
-            示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）
-            <br>
-            <input type="button" value="提交" onClick="submitSlice()"/>
-        </div>
-        <!--文件合并-->
-        <div class="file-merge">
-            待合并的文件路径：<input type="text" id="file-merge-path" onkeyup="inputMergePath(this)">
-            示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）
-            <br>
-            合并完成存放文件：<input type="text" id="merge-file" onkeyup="inputMergeFile(this)">
-            示例：/Users/pluttt/Downloads/jm/he/1.mkv
-            <br>
-            <input type="button" value="提交" onClick="submitMerge()"/>
+        <div id="main-wrapper">
+            <div class="content-body" style="margin-left: 0;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!--文件加密-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件加密</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-encrypt">
+                                        <label>文件所在目录</label>
+                                        <input type="text" class="form-control" placeholder="请填写文件所在目录" id="file-encrypt-path" onkeyup="inputEncryptPath(this)">
+                                        <label class="form-check-label" style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\ （注意：以\结尾）
+                                        </label>
+                                        <div class="input-group mt-3 mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file-encrypt-uploader" multiple/>
+                                                <label class="custom-file-label">请选择该目录下的文件</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <div class="col-sm-10">
+                                                <button type="submit" value="提交" onClick="submitEncrypt()" class="btn btn-primary">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--文件解密-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件解密</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-decrypt">
+                                        <label>文件所在目录</label>
+                                        <input type="text" class="form-control" placeholder="请填写文件所在目录" id="file-decrypt-path" onkeyup="inputDecryptPath(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\ （注意：以\结尾）
+                                        </label>
+                                        <div class="input-group mt-3 mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file-decrypt-uploader" multiple/>
+                                                <label class="custom-file-label">请选择该目录下的文件</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <div class="col-sm-10">
+                                                <button type="submit" value="提交" onClick="submitDecrypt()" class="btn btn-primary">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--文件切片-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件切片</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-slice">
+                                        <label>待切片文件</label>
+                                        <input type="text" class="form-control" placeholder="请填写待切片文件" id="slice-file" onkeyup="inputSliceFile(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/1.mkv<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\1.mkv
+                                        </label>
+                                        <br>
+                                        <label class="mt-3">切片完成存放路径</label>
+                                        <input type="text" class="form-control" placeholder="请填写切片完成存放路径" id="file-slice-path" onkeyup="inputSlicePath(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\cut\ （注意：以\结尾）
+                                        </label>
+                                        <div class="form-group row mt-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" value="提交" onClick="submitSlice()" class="btn btn-primary">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--文件合并-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件合并</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-merge">
+                                        <label>待合并的文件路径</label>
+                                        <input type="text" class="form-control" placeholder="请填写待合并的文件路径" id="file-merge-path" onkeyup="inputMergePath(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/cut/ （注意：以/结尾）<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\cut\ （注意：以\结尾）
+                                        </label>
+                                        <br>
+                                        <label class="mt-3">合并完成存放文件</label>
+                                        <input type="text" class="form-control" placeholder="请填写合并完成存放文件" id="merge-file" onkeyup="inputMergeFile(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            mac示例：/Users/pluttt/Downloads/jm/he/1.mkv （注意：以/结尾）<br>
+                                            windows示例：D:\Users\pluttt\Downloads\jm\he\1.mkv （注意：以\结尾）
+                                        </label>
+                                        <div class="form-group row mt-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" value="提交" onClick="submitMerge()" class="btn btn-primary">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div class="copyright">
+                    <p>Copyright © Designed &amp; Developed by <a target="_blank">llcc</a> 2022</p>
+                </div>
+            </div>
         </div>
 
         <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
+        <script type="text/javascript" src="../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
+        <!-- <script type="text/javascript" src="../static/js/global.min.js" th:src="@{/js/global.min.js}"></script> -->
         <script>
+
             /**文件加密*/
             //获取input目录
             let encrypt_path = "";
             function inputEncryptPath(obj) {
                 // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
                 let val = obj.value;
-                document.getElementById('file-encrypt-box').innerText = val;
+                // document.getElementById('file-encrypt-box').innerText = val;
                 encrypt_path = val;
             }
             // console.log(encrypt_path);
@@ -110,7 +208,7 @@
             function inputDecryptPath(obj) {
                 // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
                 let val = obj.value;
-                document.getElementById('file-decrypt-box').innerText = val;
+                // document.getElementById('file-decrypt-box').innerText = val;
                 decrypt_path = val;
             }
             // console.log(decrypt_path);
