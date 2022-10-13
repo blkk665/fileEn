@@ -6,34 +6,47 @@
         
     </head>
     <body>
-        <div class="get-file">
-            填写文件所在目录：<input type="text" id="file-path" onkeyup="inputDirectory(this)">
+        <!--文件加密-->
+        <div class="file-encrypt">
+            填写文件所在目录：<input type="text" id="file-encrypt-path" onkeyup="inputEncryptPath(this)">
             示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）
             <br>
-            请选择该目录<span id="file-box"></span>，以获取其下的文件
+            请选择该目录<span id="file-encrypt-box"></span>，以获取其下的文件
             <!-- <div id="Box"></div> -->
-            <input type="file" id="file-uploader" multiple/>
+            <input type="file" id="file-encrypt-uploader" multiple/>
             <br>
-            <input type="button" value="提交" onClick="submitPathName()"/>
+            <input type="button" value="提交" onClick="submitEncrypt()"/>
+        </div>
+        <!--文件解密-->
+        <div class="file-decrypt">
+            填写文件所在目录：<input type="text" id="file-decrypt-path" onkeyup="inputDecryptPath(this)">
+            示例：/Users/pluttt/Downloads/jm/ （注意：以/结尾）
+            <br>
+            请选择该目录<span id="file-decrypt-box"></span>，以获取其下的文件
+            <!-- <div id="Box"></div> -->
+            <input type="file" id="file-decrypt-uploader" multiple/>
+            <br>
+            <input type="button" value="提交" onClick="submitDecrypt()"/>
         </div>
 
         <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
         <script>
+            /**文件加密*/
             //获取input目录
-            let path = "";
-            function inputDirectory(obj) {
+            let encrypt_path = "";
+            function inputEncryptPath(obj) {
                 // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
                 let val = obj.value;
-                document.getElementById('file-box').innerText = val;
-                path = val;
+                document.getElementById('file-encrypt-box').innerText = val;
+                encrypt_path = val;
             }
-            console.log(path);
+            // console.log(encrypt_path);
 
             //上传该目录下文件信息-文件名
-            const fileUploader = document.getElementById('file-uploader');
-            let result = [];
+            const encrypt_fileUploader = document.getElementById('file-encrypt-uploader');
+            let encryptResult = [];
             // 听更 change 件并读取元数据
-            fileUploader.addEventListener('change', (event) => {
+            encrypt_fileUploader.addEventListener('change', (event) => {
                 // 获取文件列表数组
                 const files = event.target.files;
                 // 遍历并获取元数据
@@ -42,17 +55,17 @@
                     const type = file.type ? file.type: 'NA';
                     const size = file.size;
                     const lastModified = file.lastModified;
-                    result.push(name);
+                    encryptResult.push(name);
                     // console.log({ file, name, type, size, lastModified });
                 }
             });
 
             //提交路径及文件名
-            function submitPathName(){
+            function submitEncrypt(){
                 let files = [];
-                result.forEach(item => {
+                encryptResult.forEach(item => {
                     files.push({
-                        filePath: path,
+                        filePath: encrypt_path,
                         fileName: item
                     })
                 })
@@ -67,52 +80,66 @@
                         success: function (res) {
                             console.log("成功"+res);
                         }, error() {
-                            console.log("err");
+                            console.log("失败");
                         },
                     })
                 });
             }
 
-            //预览
-            // FileReader 实例
-            // const reader = new FileReader();
-            // fileUploader.addEventListener('change', (event) => {
-            //     const files = event.target.files;
-            //     const file = files[0];
-            //     reader.readAsDataURL(file);
-            //     reader.addEventListener('load', (event) => {
-            //         const img = document.createElement('img');
-            //         imageGrid.appendChild(img);
-            //         img.src = event.target.result;
-            //         img.alt = file.name;
-            //     });
-            // });
+            /**文件解密*/
+            //获取input目录
+            let decrypt_path = "";
+            function inputDecryptPath(obj) {
+                // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
+                let val = obj.value;
+                document.getElementById('file-decrypt-box').innerText = val;
+                decrypt_path = val;
+            }
+            // console.log(decrypt_path);
 
-            // 验证文件大小
-            // fileUploader.addEventListener('change', (event) => {
-            //     const file = event.target.files[0];
-            //     const size = file.size;
-            //     let msg = '';
-            //     // 检查文件大小是否大于1MB
-            //     if (size > 1024 * 1024) {
-            //         msg = `<span style="color:red;">The allowed file size is 1MB. The file you are trying to upload is of ${returnFileSize(size)}</span>`;
-            //     } else {
-            //         msg = `<span style="color:green;"> A ${returnFileSize(size)} file has been uploaded successfully. </span>`;
-            //     }
-            //     feedback.innerHTML = msg;
-            // });
+            //上传该目录下文件信息-文件名
+            const decrypt_fileUploader = document.getElementById('file-decrypt-uploader');
+            let decryptResult = [];
+            // 听更 change 件并读取元数据
+            decrypt_fileUploader.addEventListener('change', (event) => {
+                // 获取文件列表数组
+                const files = event.target.files;
+                // 遍历并获取元数据
+                for (const file of files) {
+                    const name = file.name;
+                    const type = file.type ? file.type: 'NA';
+                    const size = file.size;
+                    const lastModified = file.lastModified;
+                    decryptResult.push(name);
+                    // console.log({ file, name, type, size, lastModified });
+                }
+            });
 
-            //显示文件上传进度
-            // const reader = new FileReader();
-            // reader.addEventListener('progress', (event) => {
-            //     if (event.loaded && event.total) {
-            //         // 计算完成百分比
-            //         const percent = (event.loaded / event.total) * 100;
-            //         // 将值绑定到 `progress`标签
-            //         progress.value = percent;
-            //     }
-            // });
-
+            //提交路径及文件名
+            function submitDecrypt(){
+                let files = [];
+                decryptResult.forEach(item => {
+                    files.push({
+                        filePath: decrypt_path,
+                        fileName: item
+                    })
+                })
+                console.log(files);
+                files.forEach(item => {
+                    $.ajax({
+                        type: "GET",
+                        url: '/deFile',
+                        dataType: 'json',
+                        contentType:"application/json",
+                        data: item,
+                        success: function (res) {
+                            console.log("成功"+res);
+                        }, error() {
+                            console.log("失败");
+                        },
+                    })
+                });
+            }
 
         </script>
     </body>
