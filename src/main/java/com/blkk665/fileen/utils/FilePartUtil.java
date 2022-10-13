@@ -231,9 +231,9 @@ public class FilePartUtil {
      */
     public static void fileMerge(String chunkFolderPath, String mergeFilePathName) throws IOException {
         // 需要合并的文件所在的文件夹
-        File chunkFolder = new File("/Users/pluttt/Downloads/jm/cut/");
+        File chunkFolder = new File(chunkFolderPath);
         // 合并后的文件
-        File mergeFile = new File("/Users/pluttt/Downloads/jm/he/1.mkv");
+        File mergeFile = new File(mergeFilePathName);
         // 如果该文件夹
         if (mergeFile.exists()) {
             mergeFile.delete();
