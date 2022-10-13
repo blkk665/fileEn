@@ -170,11 +170,11 @@
             }
             //提交路径及文件名
             function submitSlice(){
-                let res = [];
-                res.push({
+                let res = {};
+                res = {
                     sourceFilePath: slice_file,
                     chunkpath: slice_path
-                })
+                }
                 console.log(res);
                 $.ajax({
                     type: "GET",
@@ -201,11 +201,11 @@
             }
             //提交路径及文件名
             function submitMerge(){
-                let res = [];
-                res.push({
+                let res = {};
+                res = {
                     chunkFolderPath: merge_path,
                     mergeFilePathName: merge_file
-                })
+                }
                 console.log(res);
                 $.ajax({
                     type: "GET",
