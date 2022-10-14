@@ -62,7 +62,7 @@ public class FileController {
 
     /**
     *
-    * DES加密
+    * AES加密
     */
     @GetMapping("/enFile")
     public void enFile(@RequestParam(value = "filePath") String filePath,
@@ -76,7 +76,7 @@ public class FileController {
 
     /**
     *
-    * DES解密
+    * AES解密
     */
     @GetMapping("/deFile")
     public void deFile(@RequestParam(value = "filePath") String filePath,
