@@ -2,13 +2,16 @@ package com.blkk665.fileen.service.impl;
 
 import com.blkk665.fileen.service.HttpFileService;
 import com.blkk665.fileen.utils.FileCryptoUtil;
+import com.blkk665.fileen.utils.FileTransferUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import java.io.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @Description
@@ -19,35 +22,46 @@ import java.io.FileOutputStream;
 @RequiredArgsConstructor
 public class HttpFileServiceImpl implements HttpFileService {
     @Override
-    public void encryptFile(MultipartFile mulitPartFile, String encKey) {
-        File sourceFile = ;
+    public File encryptFile(MultipartFile mulitPartFile, String encKey) throws FileNotFoundException {
+        File sourceFile = FileTransferUtil.multipartFileToFile(mulitPartFile);
+
+        // 获取文件名
+        String fileName = mulitPartFile.getOriginalFilename();
+        // 获取文件后缀
+        String prefix = fileName.substring(fileName.lastIndexOf("."));
+
+
         File encFile;
-        sourceFile = new File(filePath + fileName);
-        encFile = new File(filePath + fileName + ".llcc");
+        encFile = new File(fileName + "." + prefix + ".llcc");
 
 
         // 加密
+        assert sourceFile != null;
         try (FileInputStream fis = new FileInputStream(sourceFile);
              FileOutputStream fos = new FileOutputStream(encFile, true)) {
             FileCryptoUtil.encryptFile(fis, fos, encKey);
+        } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
         }
+
+        return encFile;
 
     }
 
-    @Override
-    public void decryptFile(MultipartFile mulitPartFile, String encKey) {
-        File encFile;
-        File decFile;
+//    @Override
+//    public void decryptFile(MultipartFile mulitPartFile, String encKey) {
+//        File encFile;
+//        File decFile;
+//
+//        encFile = new File(filePath + fileName);
+//        decFile = new File(filePath + (fileName.substring(0, fileName.length() - 5)));
 
-        encFile = new File(filePath + fileName);
-        decFile = new File(filePath + (fileName.substring(0, fileName.length() - 5)));
 
-
-        // 解密
-        try (FileInputStream fis = new FileInputStream(encFile);
-             FileOutputStream fos = new FileOutputStream(decFile, true)) {
-            FileCryptoUtil.decryptedFile(fis, fos, encKey);
-        }
-    }
+//        // 解密
+//        try (FileInputStream fis = new FileInputStream(encFile);
+//             FileOutputStream fos = new FileOutputStream(decFile, true)) {
+//            FileCryptoUtil.decryptedFile(fis, fos, encKey);
+//        }
+//    }
 
 }

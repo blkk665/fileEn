@@ -1,7 +1,13 @@
 package com.blkk665.fileen.controller;
 
+import com.blkk665.fileen.service.HttpFileService;
 import com.blkk665.fileen.utils.FileCryptoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,24 +21,18 @@ import java.io.FileOutputStream;
 
 @RestController
 public class HttpFileController {
-
+    @Autowired
+    HttpFileService httpFileService;
 
     /**
      *
      * AES加密
      */
-    void encryptFile(String filePath, String fileName) throws Exception {
-        File sourceFile;
-        File encFile;
-        sourceFile = new File(filePath + fileName);
-        encFile = new File(filePath + fileName + ".llcc");
+    @PostMapping("/httpEnFile")
+    public File enFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                       @RequestParam(value = "enkey") String enkey) throws Exception {
+        return httpFileService.encryptFile(multipartFile, enkey);
 
-
-        // 加密
-        try (FileInputStream fis = new FileInputStream(sourceFile);
-             FileOutputStream fos = new FileOutputStream(encFile, true)) {
-            FileCryptoUtil.encryptFile(fis, fos, encKey);
-        }
 
     }
 
@@ -42,19 +42,14 @@ public class HttpFileController {
      *
      * AES解密
      */
-    void decryptFile(String filePath, String fileName) throws Exception {
-        File encFile;
-        File decFile;
+    @GetMapping("/httpDeFile")
+    public void deFile(@RequestParam(value = "filePath") String filePath,
+                       @RequestParam(value = "fileName") String fileName) throws Exception {
+//        decryptFile(filePath, fileName);
 
-        encFile = new File(filePath + fileName);
-        decFile = new File(filePath + (fileName.substring(0, fileName.length() - 5)));
-
-
-        // 解密
-        try (FileInputStream fis = new FileInputStream(encFile);
-             FileOutputStream fos = new FileOutputStream(decFile, true)) {
-            FileCryptoUtil.decryptedFile(fis, fos, encKey);
-        }
     }
+
+
+
 
 }

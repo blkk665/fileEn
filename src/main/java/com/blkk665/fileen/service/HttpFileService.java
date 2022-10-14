@@ -2,6 +2,9 @@ package com.blkk665.fileen.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 /**
  * @Description
  * @Author blkk665
@@ -9,10 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface HttpFileService {
 
-    void encryptFile(MultipartFile mulitPartFile, String encKey);
+    File encryptFile(MultipartFile mulitPartFile, String encKey) throws FileNotFoundException;
 
 
-    void decryptFile(MultipartFile mulitPartFile, String encKey);
+//    void decryptFile(MultipartFile mulitPartFile, String encKey);
 
 
 }
