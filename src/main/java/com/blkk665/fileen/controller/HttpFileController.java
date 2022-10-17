@@ -1,7 +1,6 @@
 package com.blkk665.fileen.controller;
 
 import com.blkk665.fileen.service.HttpFileService;
-import com.blkk665.fileen.utils.FileCryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +28,21 @@ public class HttpFileController {
      * AES加密
      */
     @PostMapping("/httpEnFile")
-    public File enFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
-                       @RequestParam(value = "enkey") String enkey) throws Exception {
-        return httpFileService.encryptFile(multipartFile, enkey);
+    public String enFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                       @RequestParam(value = "enkey") String enkey) {
+        File file = httpFileService.encryptFile(multipartFile, enkey);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (file.exists()) {
+            return file.getName();
+        } else {
+            return "加密失败！";
+        }
+
 
 
     }
@@ -42,20 +53,32 @@ public class HttpFileController {
      *
      * AES解密
      */
-    @GetMapping("/httpDeFile")
-    public void deFile(@RequestParam(value = "filePath") String filePath,
-                       @RequestParam(value = "fileName") String fileName) throws Exception {
-//        decryptFile(filePath, fileName);
+    @PostMapping("/httpDeFile")
+    public String deFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                       @RequestParam(value = "enkey") String enkey) {
+
+        File file = httpFileService.decryptFile(multipartFile, enkey);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (file.exists()) {
+            return file.getName();
+        } else {
+            return "解密失败！";
+        }
 
     }
 
 
 
-    @GetMapping("/download2")
-    public String downloadFile2( HttpServletResponse response) throws IOException {
+    @GetMapping("/download")
+    public String downloadFile(HttpServletResponse response, String fileName) throws IOException {
         // 获取指定目录下的文件
-        String fileName = "/Users/pluttt/Downloads/2.mp4";
-        File file = new File(fileName);
+        String filePath = "./file/" + fileName;
+        File file = new File(filePath);
         // 如果文件名存在，则进行下载
         if (file.exists()) {
             // 配置文件下载
@@ -77,10 +100,12 @@ public class HttpFileController {
                     os.write(buffer, 0, i);
                     i = bis.read(buffer);
                 }
-                System.out.println("Download the song successfully!");
+                System.out.println("下载成功!");
+                // 文件下载一次就删除
+                file.delete();
             }
             catch (Exception e) {
-                System.out.println("Download the song failed!");
+                System.out.println("下载失败!");
             } finally {
                 if (bis != null) {
                     try {

@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class HttpFileServiceImpl implements HttpFileService {
     @Override
-    public File encryptFile(MultipartFile mulitPartFile, String encKey) throws FileNotFoundException {
+    public File encryptFile(MultipartFile mulitPartFile, String encKey) {
         File sourceFile = FileTransferUtil.multipartFileToFile(mulitPartFile);
 
         // 获取文件名
@@ -32,7 +32,7 @@ public class HttpFileServiceImpl implements HttpFileService {
 
 
         File encFile;
-        encFile = new File(fileName + "." + prefix + ".llcc");
+        encFile = new File("./file/" + fileName + ".llcc");
 
 
         // 加密
@@ -48,20 +48,34 @@ public class HttpFileServiceImpl implements HttpFileService {
 
     }
 
-//    @Override
-//    public void decryptFile(MultipartFile mulitPartFile, String encKey) {
-//        File encFile;
-//        File decFile;
-//
-//        encFile = new File(filePath + fileName);
-//        decFile = new File(filePath + (fileName.substring(0, fileName.length() - 5)));
+    @Override
+    public File decryptFile(MultipartFile mulitPartFile, String encKey) {
+        File encFile = FileTransferUtil.multipartFileToFile(mulitPartFile);
+
+        // 获取文件名
+        String fileName = mulitPartFile.getOriginalFilename();
+        // 获取文件后缀
+//        String prefix = fileName.substring(fileName.lastIndexOf("."));
+
+        File decFile;
+
+        decFile = new File("./file/" + (fileName.substring(0, fileName.length() - 5)));
 
 
-//        // 解密
-//        try (FileInputStream fis = new FileInputStream(encFile);
-//             FileOutputStream fos = new FileOutputStream(decFile, true)) {
-//            FileCryptoUtil.decryptedFile(fis, fos, encKey);
-//        }
-//    }
+        // 解密
+        try {
+            assert encFile != null;
+            try (FileInputStream fis = new FileInputStream(encFile);
+                     FileOutputStream fos = new FileOutputStream(decFile, true)) {
+                FileCryptoUtil.decryptedFile(fis, fos, encKey);
+            }
+        } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException |
+                 InvalidAlgorithmParameterException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return decFile;
+    }
 
 }

@@ -12,17 +12,11 @@ import java.io.*;
  */
 public class main {
     public static void main(String[] args) throws IOException {
-        File sourceFile;
-        File encFile;
-        sourceFile = new File("/Users/pluttt/Downloads/jm/1.mkv");
-        encFile = new File("/Users/pluttt/Downloads/jm/1.mkv.llcc");
-
-
-
-        // 加密
-        try (FileInputStream fis = new FileInputStream(sourceFile);
-             FileOutputStream fos = new FileOutputStream(encFile, true)) {
-            DESUtil.encryptFile2("12345678", fis, fos);
+       File file1 = new File("./file/1.txt");
+        try {
+            file1.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

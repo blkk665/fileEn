@@ -12,10 +12,10 @@ import java.io.FileNotFoundException;
  */
 public interface HttpFileService {
 
-    File encryptFile(MultipartFile mulitPartFile, String encKey) throws FileNotFoundException;
+    File encryptFile(MultipartFile mulitPartFile, String encKey);
 
 
-//    void decryptFile(MultipartFile mulitPartFile, String encKey);
+    File decryptFile(MultipartFile mulitPartFile, String encKey);
 
 
 }
