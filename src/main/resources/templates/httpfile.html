@@ -109,42 +109,43 @@
 
             //上传该目录下文件信息-文件名
             const encrypt_fileUploader = document.getElementById('file-encrypt-uploader');
-            let encryptResult;
-            // 听更 change 件并读取元数据
-            encrypt_fileUploader.addEventListener('change', (event) => {
-                // 获取文件列表数组
-                const files = event.target.files;
-                // 遍历并获取元数据
-                for (const file of files) {
-                    const name = file.name;
-                    const type = file.type ? file.type: 'NA';
-                    const size = file.size;
-                    const lastModified = file.lastModified;
-                    encryptResult = file;
-                    // console.log({ file, name, type, size, lastModified });
-                }
-            });
+            // let encryptResult;
+            // // 听更 change 件并读取元数据
+            // encrypt_fileUploader.addEventListener('change', (event) => {
+            //     // 获取文件列表数组
+            //     const files = event.target.files;
+            //     encryptResult = files;
+            //     // 遍历并获取元数据
+            //     for (const file of files) {
+            //         const name = file.name;
+            //         const type = file.type ? file.type: 'NA';
+            //         const size = file.size;
+            //         const lastModified = file.lastModified;
+                    
+            //         // console.log({ file, name, type, size, lastModified });
+            //     }
+            // });
 
             //提交路径及文件名
             function submitEncrypt(){
                 //blob的构造：取出input标签中的内容作为构造函数的第一个参数
                 //构造函数中的第一个参数是数组形式
                 //type指定为要要被转为blob对象的数据的类型(也就是第一个参数的类型，这里以图片为例)
-                var file = new Blob([encryptResult])
+                var file = [encrypt_fileUploader.files[0]]
                 //将构造出来的blob对象放入formData然后使用formdata发送
-                var form = new FormData();
-                form.append("multipartFile",file)
+                var formData = new FormData();
+                formData.append("multipartFile",file)
                 let data = {};
                 data = {
-                    multipartFile: form,
+                    multipartFile: formData,
                     enkey: encrypt_key
                 }
-                console.log(form);
+                console.log(file);
                 $.ajax({
                     type: "POST",
                     url: '/httpEnFile',
                     processData: false,
-                    contentType: 'multipart/form-data',
+                    contentType:"multipart/form-data",
                     data: data,
                     success: function (res) {
                         console.log("成功"+res);
