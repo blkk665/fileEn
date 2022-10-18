@@ -5,10 +5,10 @@ import com.blkk665.fileen.utils.FilePartUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * @Description
@@ -117,6 +117,9 @@ public class FileController {
         FilePartUtil.fileMerge(chunkFolderPath, mergeFilePathName);
 
     }
+
+
+
 
 
 
