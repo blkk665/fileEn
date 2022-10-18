@@ -13,7 +13,11 @@ public class PageController {
 
     @GetMapping("/index")
     public String showIndex() {
-//        model.addAttribute("message", "HelloWorld");
         return "index";
+    }
+
+    @GetMapping("/httpfile")
+    public String toHttpfile() {
+        return "httpfile";
     }
 }
