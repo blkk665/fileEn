@@ -127,17 +127,24 @@
 
             //提交路径及文件名
             function submitEncrypt(){
+                //blob的构造：取出input标签中的内容作为构造函数的第一个参数
+                //构造函数中的第一个参数是数组形式
+                //type指定为要要被转为blob对象的数据的类型(也就是第一个参数的类型，这里以图片为例)
+                var file = new Blob([encryptResult])
+                //将构造出来的blob对象放入formData然后使用formdata发送
+                var form = new FormData();
+                form.append("multipartFile",file)
                 let data = {};
                 data = {
-                    multipartFile: encryptResult,
+                    multipartFile: form,
                     enkey: encrypt_key
                 }
-                console.log(data);
+                console.log(form);
                 $.ajax({
                     type: "POST",
                     url: '/httpEnFile',
-                    dataType: 'json',
-                    contentType:"multipart/form-data",
+                    processData: false,
+                    contentType: 'multipart/form-data',
                     data: data,
                     success: function (res) {
                         console.log("成功"+res);
