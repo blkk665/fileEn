@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>首页</title>
+        <link href="./css/style.css" rel="stylesheet">
+        <!-- <link href="../static/css/style.css" rel="stylesheet"> -->
+    </head>
+    <body>
+        <div id="main-wrapper">
+            <div class="content-body" style="margin-left: 0;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!--文件加密-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件加密</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-encrypt">
+                                        <label>加密密钥</label>
+                                        <input type="text" class="form-control" placeholder="请填写加密密钥" id="file-encrypt-key" onkeyup="inputEncryptKey(this)">
+                                        <label class="form-check-label" style="font-size: 12px;">
+                                            示例：UM0QMU7mWCDQTxaP （长度不能小于16）
+                                        </label>
+                                        <div class="input-group mt-3 mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file-encrypt-uploader"/>
+                                                <label class="custom-file-label">请选择待加密文件</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-7">
+                                                <button type="submit" value="加密文件" onclick="submitEncrypt()" class="btn btn-primary">加密文件</button>
+                                                <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;">
+                                                    <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+                                                    </button><strong>文件加密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadEncrypt()">点击下载</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--文件解密-->
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">文件解密</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="file-decrypt">
+                                        <label>加密密钥</label>
+                                        <input type="text" class="form-control" placeholder="请填写加密密钥" id="file-decrypt-key" onkeyup="inputDecryptKey(this)">
+                                        <label class="form-check-label"  style="font-size: 12px;">
+                                            示例：UM0QMU7mWCDQTxaP （长度不能小于16）
+                                        </label>
+                                        <div class="input-group mt-3 mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="file-decrypt-uploader"/>
+                                                <label class="custom-file-label">请选择待解密文件</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <div class="col-sm-7">
+                                                <button type="submit" value="解密文件" onclick="submitDecrypt()" class="btn btn-primary">解密文件</button>
+                                                <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;">
+                                                    <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+                                                    </button><strong>文件解密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadDecrypt()">点击下载</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div class="copyright">
+                    <p>Copyright © Designed &amp; Developed by <a target="_blank">llcc</a> 2022</p>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
+        <script type="text/javascript" src="../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
+        <!-- <script type="text/javascript" src="../static/js/global.min.js" th:src="@{/js/global.min.js}"></script> -->
+        <script>
+
+            /**文件加密*/
+            //获取input目录
+            let encrypt_key = "";
+            function inputEncryptKey(obj) {
+                // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
+                let val = obj.value;
+                // document.getElementById('file-encrypt-box').innerText = val;
+                encrypt_key = val;
+            }
+            // console.log(encrypt_key);
+
+            //上传该目录下文件信息-文件名
+            const encrypt_fileUploader = document.getElementById('file-encrypt-uploader');
+            let encryptResult;
+            // 听更 change 件并读取元数据
+            encrypt_fileUploader.addEventListener('change', (event) => {
+                // 获取文件列表数组
+                const files = event.target.files;
+                // 遍历并获取元数据
+                for (const file of files) {
+                    const name = file.name;
+                    const type = file.type ? file.type: 'NA';
+                    const size = file.size;
+                    const lastModified = file.lastModified;
+                    encryptResult = file;
+                    // console.log({ file, name, type, size, lastModified });
+                }
+            });
+
+            //提交路径及文件名
+            function submitEncrypt(){
+                let data = {};
+                data = {
+                    multipartFile: encryptResult,
+                    enkey: encrypt_key
+                }
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '/httpEnFile',
+                    dataType: 'json',
+                    contentType:"multipart/form-data",
+                    data: data,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+            //下载已加密文件
+            function downloadEncrypt() {
+                // fileName=1.jpg.llcc
+                $.ajax({
+                    type: "GET",
+                    url: '/download',
+                    dataType: 'json',
+                    contentType:"multipart/form-data",
+                    data: data,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+
+            /**文件解密*/
+            //获取input目录
+            let decrypt_key = "";
+            function inputDecryptKey(obj) {
+                // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
+                let val = obj.value;
+                // document.getElementById('file-decrypt-box').innerText = val;
+                decrypt_key = val;
+            }
+            // console.log(decrypt_key);
+            //上传该目录下文件信息-文件名
+            const decrypt_fileUploader = document.getElementById('file-decrypt-uploader');
+            let decryptResult;
+            // 听更 change 件并读取元数据
+            decrypt_fileUploader.addEventListener('change', (event) => {
+                // 获取文件列表数组
+                const files = event.target.files;
+                // 遍历并获取元数据
+                for (const file of files) {
+                    const name = file.name;
+                    const type = file.type ? file.type: 'NA';
+                    const size = file.size;
+                    const lastModified = file.lastModified;
+                    decryptResult = file;
+                    // console.log({ file, name, type, size, lastModified });
+                }
+            });
+
+            //提交路径及文件名
+            function submitDecrypt(){
+                let data = {};
+                data = {
+                    multipartFile: decryptResult,
+                    enkey: decrypt_key
+                }
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '/httpDeFile',
+                    dataType: 'json',
+                    contentType:"multipart/form-data",
+                    data: data,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+            //下载已解密文件
+            function downloadDecrypt() {
+                // fileName=1.jpg.llcc
+                $.ajax({
+                    type: "GET",
+                    url: '/download',
+                    dataType: 'json',
+                    contentType:"multipart/form-data",
+                    data: data,
+                    success: function (res) {
+                        console.log("成功"+res);
+                    }
+                })
+            }
+
+        </script>
+    </body>
+</html>
