@@ -2,10 +2,9 @@ package com.blkk665.fileen.controller;
 
 import com.blkk665.fileen.service.HttpFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,7 @@ import java.net.URLEncoder;
  * @Date 2022/10/14
  */
 
-@RestController
+@Controller
 public class HttpFileController {
     @Autowired
     HttpFileService httpFileService;
@@ -29,7 +28,8 @@ public class HttpFileController {
      */
     @PostMapping("/httpEnFile")
     public String httpEnFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
-                       @RequestParam(value = "enkey") String enkey) {
+                             @RequestParam(value = "enkey") String enkey,
+                             Model model) {
         File file = httpFileService.encryptFile(multipartFile, enkey);
         try {
             file.createNewFile();
@@ -38,9 +38,12 @@ public class HttpFileController {
         }
 
         if (file.exists()) {
-            return file.getName();
+            // 返回加密后的文件名
+            model.addAttribute("fileName", file.getName());
+            return "httpfile";
         } else {
             return "加密失败！";
+//            model.addAttribute("加密失败！");
         }
 
 
