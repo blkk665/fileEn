@@ -3,6 +3,7 @@ package com.blkk665.fileen.service.impl;
 import com.blkk665.fileen.service.HttpFileService;
 import com.blkk665.fileen.utils.FileCryptoUtil;
 import com.blkk665.fileen.utils.FileTransferUtil;
+import com.blkk665.fileen.utils.UUIDStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +33,7 @@ public class HttpFileServiceImpl implements HttpFileService {
 
 
         File encFile;
-        encFile = new File("./file/" + fileName + ".llcc");
+        encFile = new File("./file/" + fileName + "." + UUIDStringUtil.randomUUID() + ".llcc");
 
 
         // 加密
@@ -59,7 +60,7 @@ public class HttpFileServiceImpl implements HttpFileService {
 
         File decFile;
 
-        decFile = new File("./file/" + (fileName.substring(0, fileName.length() - 5)));
+        decFile = new File("./file/" + (fileName.substring(0, fileName.length() - 38)));
 
 
         // 解密
