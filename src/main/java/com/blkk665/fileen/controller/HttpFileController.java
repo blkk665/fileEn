@@ -58,7 +58,9 @@ public class HttpFileController {
      */
     @PostMapping("/httpDeFile")
     public String httpDeFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
-                       @RequestParam(value = "enkey") String enkey) {
+                             @RequestParam(value = "enkey") String enkey,
+                             Model model) {
+
 
         File file = httpFileService.decryptFile(multipartFile, enkey);
         try {
@@ -68,7 +70,8 @@ public class HttpFileController {
         }
 
         if (file.exists()) {
-            return file.getName();
+            model.addAttribute("fileName", file.getName());
+            return "redirect:/httpfile";
         } else {
             return "解密失败！";
         }
