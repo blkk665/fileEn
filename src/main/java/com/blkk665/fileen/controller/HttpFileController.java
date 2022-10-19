@@ -39,8 +39,8 @@ public class HttpFileController {
 
         if (file.exists()) {
             // 返回加密后的文件名
-            model.addAttribute("fileName", file.getName());
-            return "redirect:/httpfile";
+            model.addAttribute("enFileName", file.getName());
+            return "httpfile";
         } else {
             return "加密失败！";
 //            model.addAttribute("加密失败！");
@@ -70,8 +70,8 @@ public class HttpFileController {
         }
 
         if (file.exists()) {
-            model.addAttribute("fileName", file.getName());
-            return "redirect:/httpfile";
+            model.addAttribute("deFileName", file.getName());
+            return "httpfile";
         } else {
             return "解密失败！";
         }
@@ -82,6 +82,8 @@ public class HttpFileController {
 
     @GetMapping("/download")
     public String download(HttpServletResponse response, String fileName) throws IOException {
+
+        System.out.println("进入下载");
         // 获取指定目录下的文件
         String filePath = "./file/" + fileName;
         File file = new File(filePath);

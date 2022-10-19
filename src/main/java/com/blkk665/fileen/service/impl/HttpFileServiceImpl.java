@@ -29,7 +29,7 @@ public class HttpFileServiceImpl implements HttpFileService {
         // 获取文件名
         String fileName = mulitPartFile.getOriginalFilename();
         // 获取文件后缀
-        String prefix = fileName.substring(fileName.lastIndexOf("."));
+//        String prefix = fileName.substring(fileName.lastIndexOf("."));
 
 
         File encFile;
