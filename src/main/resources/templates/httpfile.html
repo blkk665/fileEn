@@ -39,9 +39,13 @@
                                                 <div class="col-sm-7">
                                                     <button type="submit" value="加密文件" class="btn btn-primary">加密文件</button>
                                                     <!-- onclick="submitEncrypt()" -->
-                                                    <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;" th:style="'display:' + @{(${fileName} != 5 ? 'none' : 'inline-block')} + ''">
-                                                    </button><strong><span th:text="${fileName}"></span>文件加密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3">点击下载</a>
-                                                    <!-- onclick="downloadEncrypt()" -->
+                                                    <div class="alert alert-info alert-dismissible fade show" th:style="'display:' + @{(${fileName} ? 'inline-block' : 'none')} + ';margin-top: 10px'">
+                                                        </button>
+                                                        <form action="/download" method="get">
+                                                            <strong><span th:text="${fileName}" name="fileName"></span>文件加密完成.</strong>
+                                                            <button class="badge badge-sm badge-info ml-3" type="submit">点击下载</button>
+                                                            <!-- onclick="downloadEncrypt()" -->
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
