@@ -28,7 +28,7 @@ public class HttpFileController {
      * AES加密
      */
     @PostMapping("/httpEnFile")
-    public String enFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+    public String httpEnFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
                        @RequestParam(value = "enkey") String enkey) {
         File file = httpFileService.encryptFile(multipartFile, enkey);
         try {
@@ -54,7 +54,7 @@ public class HttpFileController {
      * AES解密
      */
     @PostMapping("/httpDeFile")
-    public String deFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+    public String httpDeFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
                        @RequestParam(value = "enkey") String enkey) {
 
         File file = httpFileService.decryptFile(multipartFile, enkey);
@@ -75,7 +75,7 @@ public class HttpFileController {
 
 
     @GetMapping("/download")
-    public String downloadFile(HttpServletResponse response, String fileName) throws IOException {
+    public String download(HttpServletResponse response, String fileName) throws IOException {
         // 获取指定目录下的文件
         String filePath = "./file/" + fileName;
         File file = new File(filePath);
