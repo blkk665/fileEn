@@ -104,13 +104,15 @@ public class HttpFileController {
                 bis = new BufferedInputStream(fis);
                 OutputStream os = response.getOutputStream();
                 int i = bis.read(buffer);
+                // 这里执行8、9次之后，会报异常
                 while (i != -1) {
                     os.write(buffer, 0, i);
                     i = bis.read(buffer);
                 }
                 System.out.println("下载成功!");
-                // 文件下载一次就删除
-                file.delete();
+            }
+            catch (IOException e) {
+                System.out.println("远程主机强迫关闭了一个现有的连接");
             }
             catch (Exception e) {
                 System.out.println("下载失败!");
@@ -129,6 +131,9 @@ public class HttpFileController {
                         e.printStackTrace();
                     }
                 }
+
+                // 不管下载成功与否，执行一次之后都立刻删除
+                file.delete();
             }
         }
         return null;
