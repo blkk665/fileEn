@@ -40,7 +40,7 @@ public class HttpFileController {
         if (file.exists()) {
             // 返回加密后的文件名
             model.addAttribute("fileName", file.getName());
-            return "httpfile";
+            return "redirect:/httpfile";
         } else {
             return "加密失败！";
 //            model.addAttribute("加密失败！");
