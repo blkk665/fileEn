@@ -19,29 +19,31 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="file-encrypt">
-                                        <label>加密密钥</label>
-                                        <input type="text" class="form-control" placeholder="请填写加密密钥" id="file-encrypt-key" onkeyup="inputEncryptKey(this)">
-                                        <label class="form-check-label" style="font-size: 12px;">
-                                            示例：UM0QMU7mWCDQTxaP （长度不能小于16）
-                                        </label>
-                                        <div class="input-group mt-3 mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Upload</span>
-                                            </div>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="file-encrypt-uploader"/>
-                                                <label class="custom-file-label">请选择待加密文件</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-7">
-                                                <button type="submit" value="加密文件" onclick="submitEncrypt()" class="btn btn-primary">加密文件</button>
-                                                <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;">
-                                                    <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
-                                                    </button><strong>文件加密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadEncrypt()">点击下载</a>
+                                        <form th:action="@{/httpEnFile}" method="post" enctype="multipart/form-data">
+                                            <label>加密密钥</label>
+                                            <input type="text" class="form-control" placeholder="请填写加密密钥" id="file-encrypt-key" name="enkey">
+                                            <label class="form-check-label" style="font-size: 12px;">
+                                                示例：UM0QMU7mWCDQTxaP （长度不能小于16）
+                                            </label>
+                                            <div class="input-group mt-3 mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input type="file" name="multipartFile" class="custom-file-input" id="file-encrypt-uploader"/>
+                                                    <label class="custom-file-label">请选择待加密文件</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-7">
+                                                    <button type="submit" value="加密文件" class="btn btn-primary">加密文件</button>
+                                                    <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;">
+                                                        <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+                                                        </button><strong><p id="result"></p>文件加密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadEncrypt()">点击下载</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -71,9 +73,9 @@
                                         <div class="form-group row ">
                                             <div class="col-sm-7">
                                                 <button type="submit" value="解密文件" onclick="submitDecrypt()" class="btn btn-primary">解密文件</button>
-                                                <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;">
+                                                <div class="alert alert-info alert-dismissible fade show" style="margin-top: 10px;" th:style="'display:' + @{(${fileName} != 5 ? 'none' : 'inline-block')} + ''">
                                                     <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
-                                                    </button><strong>文件解密完成.</strong><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadDecrypt()">点击下载</a>
+                                                    </button><strong>文件解密完成.</strong><span th:text="${msg}"></span><a href="#" class="badge badge-sm badge-info ml-3" onclick="downloadDecrypt()">点击下载</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -94,21 +96,21 @@
         <script type="text/javascript" src="../static/js/jquery-3.6.1.js" th:src="@{/js/jquery-3.6.1.js}"></script>
         <script type="text/javascript" src="../static/js/custom.min.js" th:src="@{/js/custom.min.js}"></script>
         <!-- <script type="text/javascript" src="../static/js/global.min.js" th:src="@{/js/global.min.js}"></script> -->
-        <script>
+        <script type="text/javascript" th:inline="javascript">
 
             /**文件加密*/
             //获取input目录
-            let encrypt_key = "";
-            function inputEncryptKey(obj) {
-                // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
-                let val = obj.value;
-                // document.getElementById('file-encrypt-box').innerText = val;
-                encrypt_key = val;
-            }
+            // let encrypt_key = "";
+            // function inputEncryptKey(obj) {
+            //     // let val = obj.value.replace(/[\u4E00-\u9FA5]/g, "");
+            //     let val = obj.value;
+            //     // document.getElementById('file-encrypt-box').innerText = val;
+            //     encrypt_key = val;
+            // }
             // console.log(encrypt_key);
 
             //上传该目录下文件信息-文件名
-            const encrypt_fileUploader = document.getElementById('file-encrypt-uploader');
+            // const encrypt_fileUploader = document.getElementById('file-encrypt-uploader');
             // let encryptResult;
             // // 听更 change 件并读取元数据
             // encrypt_fileUploader.addEventListener('change', (event) => {
@@ -127,40 +129,43 @@
             // });
 
             //提交路径及文件名
-            function submitEncrypt(){
-                //blob的构造：取出input标签中的内容作为构造函数的第一个参数
-                //构造函数中的第一个参数是数组形式
-                //type指定为要要被转为blob对象的数据的类型(也就是第一个参数的类型，这里以图片为例)
-                var file = [encrypt_fileUploader.files[0]]
-                //将构造出来的blob对象放入formData然后使用formdata发送
-                var formData = new FormData();
-                formData.append("multipartFile",file)
-                let data = {};
-                data = {
-                    multipartFile: formData,
-                    enkey: encrypt_key
-                }
-                console.log(file);
-                $.ajax({
-                    type: "POST",
-                    url: '/httpEnFile',
-                    processData: false,
-                    contentType:"multipart/form-data",
-                    data: data,
-                    success: function (res) {
-                        console.log("成功"+res);
-                    }
-                })
-            }
+            // function submitEncrypt(){
+            //     //blob的构造：取出input标签中的内容作为构造函数的第一个参数
+            //     //构造函数中的第一个参数是数组形式
+            //     //type指定为要要被转为blob对象的数据的类型(也就是第一个参数的类型，这里以图片为例)
+            //     var file = $("#file-encrypt-uploader")[0].files[0];
+            //     //将构造出来的blob对象放入formData然后使用formdata发送
+            //     var formData = new FormData();
+            //     formData.append("multipartFile",file)
+            //     let data = {};
+            //     data = {
+            //         formData,
+            //         enkey: encrypt_key
+            //     }
+            //     console.log(data);
+            //     $.ajax({
+            //         type: "POST",
+            //         url: '/httpEnFile',
+            //         processData: false, // 告诉jQuery不去处理发送的数据
+            //         contentType: false, // 不设置请求头
+            //         cache: false, // 上传文件不需要缓存
+            //         data: formData,
+            //         success: function (res) {
+            //             console.log("成功" + res);
+            //             $('#result').html(res);
+            //         }
+            //     })
+            // }
             //下载已加密文件
             function downloadEncrypt() {
+                // let fileName = 
                 // fileName=1.jpg.llcc
                 $.ajax({
                     type: "GET",
                     url: '/download',
                     dataType: 'json',
                     contentType:"multipart/form-data",
-                    data: data,
+                    data: fileName,
                     success: function (res) {
                         console.log("成功"+res);
                     }
