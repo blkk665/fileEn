@@ -40,10 +40,10 @@
                                         </form>
                                         <div class="form-group row">
                                             <div class="col-sm-7">
-                                                <div class="alert alert-info alert-dismissible fade show" th:style="'display:' + @{(${fileName} ? 'inline-block' : 'none')} + ';margin-top: 10px'">
+                                                <div class="alert alert-info alert-dismissible fade show" th:style="'display:' + @{(${enFileName} ? 'inline-block' : 'none')} + ';margin-top: 10px'">
                                                     <form action="/download" method="get">
-                                                        <strong><span th:text="${fileName}"></span>文件加密完成.</strong>
-                                                        <input type="text" name="fileName" th:value="${fileName}" style="display: none;"/>
+                                                        <strong><span th:text="${enFileName}"></span>文件加密完成.</strong>
+                                                        <input type="text" name="enFileName" th:value="${enFileName}" style="display: none;"/>
                                                         <button class="badge badge-sm badge-info ml-3" type="submit">点击下载</button>
                                                         <!-- onclick="downloadEncrypt()" -->
                                                     </form>
@@ -83,10 +83,10 @@
                                         </form>
                                         <div class="form-group row ">
                                             <div class="col-sm-7">
-                                                <div class="alert alert-info alert-dismissible fade show" th:style="'display:' + @{(${fileName} ? 'inline-block' : 'none')} + ';margin-top: 10px'">
+                                                <div class="alert alert-info alert-dismissible fade show" th:style="'display:' + @{(${deFileName} ? 'inline-block' : 'none')} + ';margin-top: 10px'">
                                                     <form action="/download" method="get">
-                                                        <strong><span th:text="${fileName}"></span>文件解密完成.</strong>
-                                                        <input type="text" name="fileName" th:value="${fileName}" style="display: none;"/>
+                                                        <strong><span th:text="${deFileName}"></span>文件解密完成.</strong>
+                                                        <input type="text" name="deFileName" th:value="${deFileName}" style="display: none;"/>
                                                         <button class="badge badge-sm badge-info ml-3" type="submit">点击下载</button>
                                                         <!-- onclick="downloadDecrypt()" -->
                                                     </form>
