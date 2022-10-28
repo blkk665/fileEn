@@ -2,10 +2,9 @@ package com.blkk665.fileen.controller;
 
 import com.blkk665.fileen.service.HttpFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,7 @@ import java.net.URLEncoder;
  * @Date 2022/10/14
  */
 
-@RestController
+@Controller
 public class HttpFileController {
     @Autowired
     HttpFileService httpFileService;
@@ -28,8 +27,9 @@ public class HttpFileController {
      * AES加密
      */
     @PostMapping("/httpEnFile")
-    public String enFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
-                       @RequestParam(value = "enkey") String enkey) {
+    public String httpEnFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                             @RequestParam(value = "enkey") String enkey,
+                             Model model) {
         File file = httpFileService.encryptFile(multipartFile, enkey);
         try {
             file.createNewFile();
@@ -38,9 +38,12 @@ public class HttpFileController {
         }
 
         if (file.exists()) {
-            return file.getName();
+            // 返回加密后的文件名
+            model.addAttribute("enFileName", file.getName());
+            return "httpfile";
         } else {
             return "加密失败！";
+//            model.addAttribute("加密失败！");
         }
 
 
@@ -54,8 +57,10 @@ public class HttpFileController {
      * AES解密
      */
     @PostMapping("/httpDeFile")
-    public String deFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
-                       @RequestParam(value = "enkey") String enkey) {
+    public String httpDeFile(@RequestParam(value = "multipartFile") MultipartFile multipartFile,
+                             @RequestParam(value = "enkey") String enkey,
+                             Model model) {
+
 
         File file = httpFileService.decryptFile(multipartFile, enkey);
         try {
@@ -65,7 +70,8 @@ public class HttpFileController {
         }
 
         if (file.exists()) {
-            return file.getName();
+            model.addAttribute("deFileName", file.getName());
+            return "httpfile";
         } else {
             return "解密失败！";
         }
@@ -75,7 +81,9 @@ public class HttpFileController {
 
 
     @GetMapping("/download")
-    public String downloadFile(HttpServletResponse response, String fileName) throws IOException {
+    public String download(HttpServletResponse response, String fileName) throws IOException {
+
+        System.out.println("进入下载");
         // 获取指定目录下的文件
         String filePath = "./file/" + fileName;
         File file = new File(filePath);
@@ -96,13 +104,15 @@ public class HttpFileController {
                 bis = new BufferedInputStream(fis);
                 OutputStream os = response.getOutputStream();
                 int i = bis.read(buffer);
+                // 这里执行8、9次之后，会报异常
                 while (i != -1) {
                     os.write(buffer, 0, i);
                     i = bis.read(buffer);
                 }
                 System.out.println("下载成功!");
-                // 文件下载一次就删除
-                file.delete();
+            }
+            catch (IOException e) {
+                System.out.println("远程主机强迫关闭了一个现有的连接");
             }
             catch (Exception e) {
                 System.out.println("下载失败!");
@@ -121,6 +131,9 @@ public class HttpFileController {
                         e.printStackTrace();
                     }
                 }
+
+                // 不管下载成功与否，执行一次之后都立刻删除
+                file.delete();
             }
         }
         return null;

@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 @RestController
 public class FileController {
 
+    // 硬编码，示例enkey
     private String encKey = "UM0QMU7mWCDQTxaP";
 
 
